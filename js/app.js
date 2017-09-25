@@ -1,19 +1,21 @@
 console.log("linked!")
+var playerOneGame = [];
+var playerTwoGame = [];
+
 
 // wait for the DOM to finish loading
-$(document).ready(function() {
 
 //Hello!
   alert("Hi! Welcome to my Tic Tac Toe Game, this site is still under construction however turn up the volume and enjoy!");
 
 //Variable
+  var xPlayer = "url('http://www.freeiconspng.com/uploads/x-png-13.png')";
+  var oPlayer = "url('https://orig00.deviantart.net/570e/f/2012/051/8/0/circulos_png_by_dulcezavala-d4qg7zf.png')";
   var playerNameOne = prompt("Enter your name Player One");
   var playerNameTwo = prompt("Enter your name Player Two");
-  var boxes = document.querySelectorAll(".box")
+  var boxes = [...document.querySelectorAll(".box")];
   var playerOne = true;
   var resetButton = document.querySelector(".resetButton");
-  var playerOneGame = [];
-  var playerTwoGame = [];
   var winCombinations = [
     [0, 1, 2],
     [3, 4, 5],
@@ -28,10 +30,11 @@ $(document).ready(function() {
     playerNameOne: [],
     playerNameTwo: []
   }
+  var body = document.querySelector('body');
+  var winningBackground = "url('https://media.tenor.com/images/0565d3b4a90ce5c6c6a938df82c14049/tenor.gif')";
 
 //Background Changes Color With Every Click
   function backgroundRandomColors(){
-    var body = document.querySelector('body');
 
     var r = Math.floor(Math.random()*256);
     var g = Math.floor(Math.random()*256);
@@ -47,7 +50,12 @@ $(document).ready(function() {
       console.log("you clicked a box");
       if (playerOne === true){
         backgroundRandomColors();
-        thisBox.style.backgroundImage = "url(\"http://www.freeiconspng.com/uploads/x-png-13.png\")"
+        thisBox.style.backgroundImage = xPlayer;
+        playerOneGame.push(boxes.indexOf(thisBox));
+        if(hasWon(playerOneGame)){
+          body.style.background = winningBackground;
+          alert(`Congrats ${playerNameOne} you win!`)
+        }
         // thisBox.innerText = "X"
         document.querySelector("h1").style.color = "#000000";
         document.querySelector("h1").innerText = playerNameTwo + ", your move!";
@@ -56,7 +64,12 @@ $(document).ready(function() {
       } else {
         // thisBox.innerText = "O"
         backgroundRandomColors();
-        thisBox.style.backgroundImage = "url(\"https://orig00.deviantart.net/570e/f/2012/051/8/0/circulos_png_by_dulcezavala-d4qg7zf.png\")"
+        thisBox.style.backgroundImage = oPlayer;
+        playerTwoGame.push(boxes.indexOf(thisBox));
+        if(hasWon(playerTwoGame)){
+          body.style.background = winningBackground;
+          alert(`Congrats ${playerNameTwo} you win!` )
+        }
         document.querySelector("h1").style.color = "#d70909";
         document.querySelector("h1").innerText = playerNameOne + ", your move!";
         playerOne = true;
@@ -65,28 +78,24 @@ $(document).ready(function() {
     })
   });
 
+  function hasWon(player){
+    for (var i = 0; i < winCombinations.length; i++) {
+      var current_comb = winCombinations[i];
+      if(player.includes(current_comb[0]) &&
+        player.includes(current_comb[1]) &&
+        player.includes(current_comb[2])
+      ){
+        return true;
+      }
+    }
+    return false;
+  };
+
 //Reset Button
   function reset(){
-    console.log("hola we");
     location.reload();
 	};
 
   resetButton.addEventListener("click", function(){
     reset();
   });
-
-
-
-//REALLY tried to make it store the values to compare it to the winning arrays :(
-  for (var i = 0; i < winCombinations.length; i++) {
-    if (winCombinations[i] == playerOneGame[i]){
-      console.log(playerNameOne + " won!");
-    } else if (winCombinations[i] == playerTwoGame) {
-      console.log(playerNameTwo + " won!");
-    }
-    else {
-      console.log("Draw");
-    }
-  };
-
-});
